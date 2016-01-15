@@ -2,7 +2,8 @@
 
 ### pip install rsa ###
 from Crypto.PublicKey import RSA
-from Crypto.Signature import PKCS1_v1_5
+from Crypto.Signature import PKCS1_v1_5 as signer_alg
+from Crypto.Cipher import PKCS1_v1_5 as cipher_alg
 ### should be SHA
 from Crypto.Hash import MD5 as hash_alg
 
@@ -17,12 +18,14 @@ except:
     key_priv = None
 
 def rsa_encrypt_and_b64encode(key, buf):
-    result = key.encrypt(buf, None)
-    return base64.b64encode(result[0])
+    c = cipher_alg.new(key)
+    result = c.encrypt(buf)
+    return base64.b64encode(result)
 
 def rsa_b64decode_and_decrypt(key, buf):
+    c = cipher_alg.new(key)
     b = base64.b64decode(buf)
-    return key.decrypt(b)
+    return c.decrypt(b, 'rsa_sample.py****DECRYPTION****FAILED****1234')
 
 result = 0
 
